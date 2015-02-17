@@ -19,7 +19,8 @@ app.fetch = function(url){
     url: url + '?order=-createdAt',
     datatype: "json",
     success: function(data){
-      _.each(data.results, app.addMessage);
+      compareMessages(data.results);
+      _.each(app.messages, app.addMessage);
     }
   });
 }
@@ -27,6 +28,27 @@ app.clearMessages = function(){
   $('#chats').children().remove()
 }
 
+app.rooms = {'4chan' : '4chan'};
+
+app.messages = [{}];
+
+// (app.message[i].text === )
+var compareMessages = function(messages){
+  //debugger;
+  for(var i = 0; i < messages.length; i++) {
+    var hasDuplicate = false;
+    for(var j = 0; j < app.messages.length; j++){
+      var itext = messages[i].text;
+      var jtext = app.messages[j].text;
+      if (itext === jtext) {
+        hasDuplicate = true;
+      }
+    }
+    if(!hasDuplicate){
+      app.messages.push(messages[i]);
+    }
+  }
+}
 
 app.addMessage = function(message){
   var container = $('<p class="chat"></p>');
@@ -40,7 +62,7 @@ app.addMessage = function(message){
 }
 
 app.addRoom = function(room){
-  $("#roomSelect").append('<div>' + room + '</div>')
+  $("#roomSelect").append('<span id="' + room + '">' + room + '</span>')
 }
 
 app.addFriend = function(){
@@ -52,17 +74,22 @@ setInterval(function(){
 },3000)
 
 $('document').ready(function(){
-  $('.send').on('click', function(){
-    console.log("clicked")
+  var getName = function(){
+    return window.location.search.substring(10)
+  }
+  var handleSubmit = function(){
     app.send({
       'username': getName(),
       'text': $('.input').val(),
       'roomname':'4chan'
     })
     $('.input').val("")
+  }
+
+  $('.addRoom').on('click', function(){
+    app.addRoom($('.chatRoom').val())
+
   })
 
-  var getName = function(){
-    return window.location.search.substring(10)
-  }
+  $('.send').on('click', handleSubmit);
 })
