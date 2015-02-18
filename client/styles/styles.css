@@ -4,6 +4,13 @@ body {
     padding: 0 25px;
     font-family: arial, sans-serif;
 }
+#chatBox{
+    /*float: right;*/
+}
+
+#friendList{
+    float: left;
+}
 
 #main {
     width: 500px;
@@ -13,6 +20,7 @@ body {
     padding: 50px 60px;
     border: solid #ddd;
     border-width: 0 1px 1px 1px;
+    float: right;
 }
 
 #main h1 {
